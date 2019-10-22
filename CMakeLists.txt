@@ -21,6 +21,9 @@ add_executable(sssp
         )
 
 add_executable(testGraph
-        src/testGraph.cpp)
+        tests/testGraph.cpp)
+
+add_executable(testDijkstra
+        tests/testDijkstra.cpp)
 
 
