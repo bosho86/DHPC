@@ -46,6 +46,17 @@ public:
     int getNumVertex(){
         return numVertices;
     }
+
+    //get index of neighbours of vertex at idx
+    std::vector<int> getNeighbour(int idx){
+        std::vector<int> neighbours;
+        for (int i = 0; i < numVertices; ++i) {
+            if (adjMat[idx * 6 + i] != 0){
+                neighbours.push_back(i);
+            }
+        }
+        return neighbours;
+    }
 };
 
 #endif //DHPC_GRAPH_HPP
