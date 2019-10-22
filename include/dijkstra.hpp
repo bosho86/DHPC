@@ -1,20 +1,29 @@
 #ifndef DIJKSTRA_HPP
 #define DIJKSTRA_HPP
 
-template <typename Vector, typename Graph, typename Edge>
-Vector dijkstra(Graph graph, Edge start);
+#include <list>
 
-/* PRECONDITIONS:
- *
- * 'graph' a graph with non-negative edge weight
- *
- * 'start' a vertex element of graph
- *
- *
- * POSTCONDITIONS:
- *
- * the return value will calculate the minimal weights of the shortest paths with start arr
- *
- */
+template <typename Graph, typename Vector>
+class Dijkstra{
+private:
+    std::list<int> _M;
+    std::list<int> _R;
+    std::list<int> _U;
+    Graph _graph;
+    Vector _shortestPath;
+
+public:
+    //default constructor
+    Dijkstra();
+
+    //constructor
+    Dijkstra(Graph graph, int startIdx);
+
+
+
+
+};
+
+
 
 #endif
