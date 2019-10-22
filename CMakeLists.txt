@@ -20,4 +20,7 @@ add_executable(sssp
         src/dijkstra.cpp
         )
 
+add_executable(testGraph
+        src/testGraph.cpp)
+
 
