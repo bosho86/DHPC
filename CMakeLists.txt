@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5.2
+cmake_minimum_required(VERSION 3.5.2)
 
 project(DHPC)
 
@@ -12,9 +12,12 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS_DEFAULT} -std=c11 -Wall -Wextra -O3 -fno-tree
 include_directories(
         include
 )
+include_directories(src)
 
 ##### Source files to compile for benchmark executable #####
-add_executable(
-        src/bellmanfordalgo.cpp)
+add_executable(sssp
+        src/bellmanfordalgo.cpp
+        src/dijkstra.cpp
+        )
 
 
