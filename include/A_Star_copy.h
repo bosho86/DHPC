@@ -125,7 +125,7 @@ public:
     Tn path(std::list< point<Tp> > &path);
     
     map<Graph, Tp> m; point<Tp> end, start;
-    point<Tp> neighbours[8];
+    std::vector< point<Tp> > neighbours(8);
     std::list<node<Tp, Tn>> open;
     std::list<node<Tp, Tn>> closed;
     
