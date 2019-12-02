@@ -12,7 +12,10 @@
  */
 
 #include <mpi.h>
+#include <chrono>  // for high_resolution_clock
 #include <A_Start.h>
+
+//void mpi_loop_splitter(int *size, int *loopmin, int *loopmax);
 
 int main( int argc, char* argv[] ) {
    
@@ -31,6 +34,10 @@ int main( int argc, char* argv[] ) {
     
     bool read_file = true;
     Graph<double> graph(0, read_file, MAP);
+    
+    
+    //std::pair<double, double> v = graph.getX_Y_at_Vertex(1);
+    //std::cout<< v.first << "  " << v.second << std::endl;
  
    /* 
     std::vector< std::vector< std::pair<double ,int> > > Vertex_cost_and_NN;
@@ -61,12 +68,76 @@ int main( int argc, char* argv[] ) {
     exit(0);
     */ 
 
-    map<double> map_graph(graph);
     
-    map<double> m;
-    point<double> s(0, 0), e( 7, 7 );
-    aStar<double> as;
- 
+    //aStar<double> A(graph);
+    //std::pair<double, double> w = A.getX_Y_at_point(1);
+    //std::cout<< w.first << "  " << w.second << std::endl;
+    
+    map<double> m(graph);
+    //point<double> s(0, 0), e( 7, 7 );
+    
+    aStar<double> as(graph);
+    
+    int is = 0;
+    int ie = 2;
+
+    double time_avg = 0.0;
+    int icount = 0;
+        
+    do {
+    
+        auto start = std::chrono::high_resolution_clock::now();
+
+//        for (int is = imin; is < imax; is++ ){
+
+//            for (int ie = 0; ie < NNodes; ie++ ){
+
+                if( as.search( is, ie, m ) ) {
+
+//                    std::pair<double, double> v = graph.getX_Y_at_Vertex(ie);
+
+                    //std::cout << "Check: " << std::endl;
+                    //std::cout << " x = " << v.first << " y = " << v.second << std::endl;
+
+                    //std::list<point<double>> path;
+                    //int c = as.path( path );        
+                    //std::cout<< "rank =" << rank <<std::endl;
+                    //for(int i=0;  i < as.short_path.size(); i++ ) {
+                    //    std::cout<< "(" << as.short_path[i]  <<  ") ";
+                   //}
+                    as.clean_lists();
+                    
+                }else{
+                    
+                    std::cout<< "  Rank " << rank << " Path from is = "<< is << " to " << " ie = "<< ie << " not found"<< std::endl;
+                    std::cout << "\n\n";            
+
+//                }else{
+
+//                    std::cout << "Path from is = "<< is << " to " << " ie = "<< ie << " not found"<< std::endl;
+
+                }
+
+//            }
+
+//        }
+
+        auto finish = std::chrono::high_resolution_clock::now();
+        
+//        MPI_Barrier(MPI_COMM_WORLD);
+        std::chrono::duration<double> elapsed = finish - start;
+        time_avg = time_avg + elapsed.count();
+        icount++;
+
+    } while (icount < 1);
+    time_avg = time_avg / (double) (icount);
+    
+    //if(rank == 1)
+    std::cout << "Time wasted = " << time_avg << " Seconds"  <<std::endl;
+    MPI_Abort(MPI_COMM_WORLD, 911);
+    
+    
+ /*
     if( as.search( s, e, m ) ) {
         std::list<point<double>> path;
         int c = as.path( path );
@@ -90,8 +161,8 @@ int main( int argc, char* argv[] ) {
         }
     }
     std::cout << "\n\n";
-    
-    MPI_Finalize(); 
+*/    
+    MPI_Finalize();
     return 0;
 }
 

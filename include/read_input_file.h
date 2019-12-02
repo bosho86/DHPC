@@ -48,7 +48,7 @@ public:
                 if(!stream)
                     break;
                
-                if(n > -1.0){
+                if(n > -1){
                     
                     vinner.push_back(n);
 

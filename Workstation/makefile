@@ -31,11 +31,12 @@ CXX_FLAGS =  -lpthread  -Wl, -Bdynamic -lm -lmpi
 
 # Source file names:
 CPP_SRCS += \
-$(SRC)/main_A_Start.cpp
+$(SRC)/main_dijkstra.cpp
+#$(SRC)/main_A_Start.cpp  dijkstra
 
 # Corresponding objects:
 OBJS +=\
-./main_A_Start.o \
+./main_dijkstra.o \
 
 # Including the necessary libraries:
 INCLUDES += \

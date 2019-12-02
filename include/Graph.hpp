@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <valarray>
+#define infinity 1E6
 
 template <typename T>
 class Graph {
@@ -56,7 +57,11 @@ public:
     
     std::vector< std::pair<T ,T> > getVertex_X_Y() {
         return vertex_X_Y;
-    }     
+    }
+    
+    std::pair<T ,T> getX_Y_at_Vertex(int vertex) {
+        return vertex_X_Y[vertex];
+    }    
     
     //get index of neighbours of vertex at idx
     std::vector<T> getNeighbour(int idx){
@@ -107,7 +112,7 @@ public:
 
             T ix = MAP[i][1];
             T iy = MAP[i][2];
-            vertex_X_Y.push_back(std::make_pair(ix, iy));
+            vertex_X_Y.push_back( std::make_pair(ix, iy) );
             //std::cout << ix << " " << iy << " " << i << std::endl;
 
             for (int in = 0; in < ns; in++){
@@ -121,12 +126,13 @@ public:
 
         for (int i = 0; i < numVertices; i++) {
             for (int j = 0; j < numVertices; j++) {
-                adjMat[i * numVertices + j] = T(0);
+                adjMat[i * numVertices + j] = T(infinity);
             }
         }
-
+        
         for (int i = 0; i < numVertices; i++) {
 
+            
             int ns = NN[i].size();
             std::vector< std::pair<T ,int> > temp;
 
@@ -134,19 +140,29 @@ public:
 
                 int nn = NN[i][j];
                 
-                T dx = vertex_X_Y[i].first - vertex_X_Y[nn].first;
-                T dy = vertex_X_Y[i].second - vertex_X_Y[nn].second;
+                if(nn > -1 ){
+                    
+                    T dx = vertex_X_Y[i].first - vertex_X_Y[nn].first;
+                    T dy = vertex_X_Y[i].second - vertex_X_Y[nn].second;
 
-                T dist = T(std::sqrt(dx * dx + dy * dy));
-                adjMat[i * numVertices + nn ] = dist;
-                temp.push_back(std::make_pair(dist,  nn));
+                    T dist = T(std::sqrt(dx * dx + dy * dy));
+                    adjMat[i * numVertices + nn ] = dist;
+                    temp.push_back(std::make_pair(dist,  nn));                
                 
+                }else{
+                
+                    T dist = T(1e6);
+                    adjMat[i * numVertices + nn ] = dist;
+                    temp.push_back(std::make_pair(dist,  nn));                            
+                
+                }
                 
             }
             
             vertex_cost_and_NN.push_back(temp);
 
-        }         
+        }
+        
         
     }
 
