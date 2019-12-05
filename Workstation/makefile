@@ -2,13 +2,14 @@
 
 PLAT =
 
-CPP = /usr/local/bin/mpic++
+CPP = /usr/local/bin/mpicc
 
 # Available Compilation Flags for g++:
-CPP_OPT = -O0
-CPP_WARNINGS = 
+CPP_OPT =   -O0
+CPP_WARNINGS =  
 #Wall
-CPP_DEBUG = -g -Wall
+CPP_DEBUG = 
+#-g -Wall
 CPP_VER = -std=c++11
 CPP_STD = -lstdc++
 OPEMMP = 
@@ -27,7 +28,7 @@ EIGEN =
 HDR = /Users/hamilton/Documents/GitHub/DHPC/include
 SRC = /Users/hamilton/Documents/GitHub/DHPC/src
 
-CXX_FLAGS =  -lpthread  -Wl, -Bdynamic -lm -lmpi
+CXX_FLAGS = -lpthread  -Wl, -Bdynamic -lm -lmpi
 
 # Source file names:
 CPP_SRCS += \

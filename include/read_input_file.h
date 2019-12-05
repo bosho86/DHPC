@@ -28,7 +28,7 @@ public:
     readInputFile(){
     };
     
-    std::vector< std::vector<T> > readFileToVector(const char *filename)
+    std::vector< std::vector<T> > readFileToVector(char *filename)
     {
         bool Val_bool = true;
         std::ifstream source;
@@ -60,6 +60,39 @@ public:
         
         return voutter;
     }
+    
+    std::vector< std::vector<T> > readFileToVectorHardCoded()
+    {
+        bool Val_bool = true;
+        std::ifstream source;
+        source.open("map1000.dat");
+        std::string line;
+        std::vector< std::vector<T> > voutter;
+
+        while (std::getline(source, line))
+        {
+            std::vector<T> vinner;
+            std::stringstream stream(line);
+            
+            while(Val_bool) {
+                T n;
+                stream >> n;
+                
+                if(!stream)
+                    break;
+               
+                if(n > -1){
+                    
+                    vinner.push_back(n);
+
+                }
+            }            
+            
+            voutter.push_back(vinner);
+        }
+        
+        return voutter;
+    }    
 
     void displayVector(const std::vector< std::vector <T> > v, const int index)
     {

@@ -106,6 +106,7 @@ public:
         for (int i = 0; i < numVertices; i++) {
 
             int ns = MAP[i].size() - 3;
+            
             NN[i].resize(ns);
             
             //std::cout<<  ns << " " << MAP[i].size() <<std::endl;

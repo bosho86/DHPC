@@ -1,0 +1,131 @@
+# Compiler:
+
+PLAT =
+
+#CPP = g++
+#CPP = mpic++
+
+# path for openmp 
+#/opt/intel/compilers_and_libraries_2016.3.210/linux/compiler/include/omp.h
+#/opt/rh/devtoolset-3/root/usr/lib/gcc/x86_64-redhat-linux/4.9.2/include/omp.h
+
+NANOTCAD      = /home/nanotcad/sw
+GNU64         = /usr/pack/gcc-8.2.0-af/linux-x64/
+MPIHOME       = /usr/pack/mpich-3.2.1-af/linux-x64/
+INTEL64       = /usr/pack/intel_compiler-2015.0.090-af/Linux-x86_64/
+MPICXX        = $(MPIHOME)/bin/mpic++ -Wl,-rpath -Wl,$(INTEL64)/lib
+MKLHOME       = $(INTEL64)/mkl/lib/intel64
+
+CPP = $(MPIHOME)/bin/mpic++
+
+# Available Compilation Flags for g++:
+CPP_OPT = -O3
+CPP_WARNINGS = 
+#Wall
+CPP_DEBUG = 
+#-g -Wall
+CPP_VER = -std=c++98
+CPP_STD = -lstdc++
+OPEMMP = 
+#-fopenmp
+
+# Available Compilation Flags for MPI:
+
+# Choosing the compilation Flags:
+
+COMP_Flags = $(CPP_DEBUG) $(CPP_OPT) $(CPP_VER) $(OPEMMP)
+EXEC_Flags = $(CPP_OPT) $(CPP_STD) $(OPEMMP)
+
+# PathS to GMM library, source files and their headers: 
+GMM = ../SOURCE_CODE/Gmm_Functions_03-06-2013
+EIGEN = ../SOURCE_CODE/eigen
+HDR = ../SOURCE_CODE/Source_h
+SRC = ../SOURCE_CODE/Source_Cpp
+
+# Paths to ARPACK libraries
+ARPACKPP_INC = /home/carrillh/Mac_Hamilton/NESS/SOURCE_CODE/arpackpp-master/include
+ARPACK_DIR = /home/carrillh/Mac_Hamilton/NESS/SOURCE_CODE/arpackpp-master/external
+FORTRAN_LIBS = -lgfortran
+LAPACK_LIB   = -L$(MKLHOME) -lmkl_gf_lp64 -lmkl_sequential -lmkl_core -Wl,-rpath -Wl,$(MKLHOME)
+ARPACK_LIB = $(ARPACK_DIR)/libarpack.a
+BLAS_LIB = $(ARPACK_DIR)/OpenBLAS/libopenblas_sandybridgep-r0.2.20.dev.a
+SUPERLU_LIB = $(ARPACK_DIR)/libsuperlu.a
+SSparse_DIR = $(ARPACK_DIR)/SuiteSparse
+AMD_LIB = $(SSparse_DIR)/AMD/Lib/libamd.a
+METIS_LIB = $(SSparse_DIR)/metis-4.0/libmetis.a
+UMFPACK_LIB = $(SSparse_DIR)/UMFPACK/Lib/libumfpack.a
+CHOLMOD_LIB = $(SSparse_DIR)/CHOLMOD/Lib/libcholmod.a
+COLAMD_LIB = $(SSparse_DIR)/COLAMD/Lib/libcolamd.a
+CCOLAMD_LIB = $(SSparse_DIR)/CCOLAMD/Lib/libccolamd.a
+CAMD_LIB = $(SSparse_DIR)/CAMD/Lib/libcamd.a
+SSconfig_LIB = $(SSparse_DIR)/SuiteSparse_config/libsuitesparseconfig.a
+
+# cholmod need additional headers:
+CHOLMOD_INC  = -I$(SSparse_DIR)/CHOLMOD/Include -I$(SSparse_DIR)/SuiteSparse_config
+
+#CXX_FLAGS = -D$(PLAT) -lpthread -Wl,-Bstatic -lgfortran -Wl,-Bdynamic -lm
+CXX_FLAGS =  -pthread  -Wl,-Bstatic -lgfortran -Wl,-Bdynamic -lm -lmpi
+
+ALL_LIBS     = $(ARPACK_LIB) $(BLAS_LIB) $(LAPACK_LIB) $(FORTRAN_LIBS) $(SUPERLU_LIB) $(AMD_LIB) $(METIS_LIB) $(UMFPACK_LIB) $(CHOLMOD_LIB) 
+
+
+# Source file names:
+CPP_SRCS += \
+$(SRC)/Material_Data.cpp \
+$(SRC)/AtomStruc.cpp \
+$(SRC)/MPIworlds.cpp \
+$(SRC)/main.cpp \
+$(SRC)/NEGFball.cpp \
+$(SRC)/MeshNode.cpp \
+$(SRC)/Inputs.cpp \
+$(SRC)/Poisson.cpp \
+$(SRC)/EM_Hamilton.cpp \
+$(SRC)/KP_Hamiltonian.cpp \
+$(SRC)/NEGFdisip.cpp \
+$(SRC)/Electron_Transp_Ox.cpp \
+$(SRC)/Drift_Diffusion.cpp \
+$(SRC)/KG_Mobility.cpp 
+#$(SRC)/EffectiveMassExtractor.cpp
+
+# Corresponding objects:
+OBJS +=\
+./Material_Data.o \
+./AtomStruc.o \
+./MPIworlds.o \
+./main.o \
+./NEGFball.o \
+./MeshNode.o \
+./Inputs.o \
+./Poisson.o \
+./EM_Hamilton.o \
+./KP_Hamiltonian.o \
+./NEGFdisip.o \
+./Electron_Transp_Ox.o \
+./Drift_Diffusion.o \
+./KG_Mobility.o 
+# ./EffectiveMassExtractor.o
+
+# Including the necessary libraries:
+INCLUDES += \
+-I$(EIGEN) \
+-I$(GMM) \
+-I$(HDR) \
+
+# Generation of the executable:
+%.o: $(SRC)/%.cpp
+	@echo 'Building file: $<'
+	@echo 'Invoking: Cross C++ Compiler'
+	$(CPP) $(COMP_Flags) $(INCLUDES) -I$(ARPACKPP_INC) $(CHOLMOD_INC) -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<" 
+	@echo 'Finished building: $<'
+	@echo ' '
+
+all: ness
+
+ness: $(OBJS)
+	@echo 'Building Target: $@'
+	$(CPP) $(EXEC_Flags) $(CXX_FLAGS) -o "ness" $(OBJS) $(ALL_LIBS) 
+	@echo 'Finished building target: $@'
+	@echo ' '
+
+clean: 
+	rm *.o *.d ness
