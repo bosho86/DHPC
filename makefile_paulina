@@ -1,0 +1,67 @@
+# Compiler:
+
+PLAT =
+
+CPP = /usr/bin/mpicc
+
+# Available Compilation Flags for g++:
+CPP_OPT =   -O0
+CPP_WARNINGS =  
+#Wall
+CPP_DEBUG = 
+#-g -Wall
+CPP_VER = -std=c++11
+CPP_STD = -lstdc++
+OPEMMP = 
+#-fopenmp
+
+# Available Compilation Flags for MPI:
+
+# Choosing the compilation Flags:
+
+COMP_Flags = $(CPP_DEBUG) $(CPP_OPT) $(CPP_VER) $(OPEMMP)
+EXEC_Flags = $(CPP_OPT) $(CPP_STD) $(OPEMMP)
+
+# PathS to GMM library, source files and their headers: 
+GMM = 
+EIGEN = 
+HDR = /home/paulina/Desktop/DHPC/src
+SRC = /home/paulina/Desktop/DHPC/src
+
+#CXX_FLAGS = -lpthread  -Wl, -Bdynamic -lm -lmpi
+CXX_FLAGS = -pthread -Wl, -Bdynamic -lm -lmpi
+
+# Source file names:
+CPP_SRCS += \
+$(SRC)/bellmanford_matrix_big.cpp
+#$(SRC)/main_A_Start.cpp  dijkstra
+
+# Corresponding objects:
+OBJS +=\
+./bellmanford_matrix_big.o \
+
+# Including the necessary libraries:
+INCLUDES += \
+-I$(EIGEN) \
+-I$(GMM) \
+-I$(HDR) \
+
+# Generation of the executable:
+%.o: $(SRC)/%.cpp
+	@echo 'Building file: $<'
+	@echo 'Invoking: Cross C++ Compiler'
+	$(CPP) $(COMP_Flags) $(INCLUDES) -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<" 
+	@echo 'Finished building: $<'
+	@echo ' '
+
+all: bellmanford_matrix_big
+
+bellmanford_matrix_big: $(OBJS)
+	@echo 'Building Target: $@'
+	$(CPP) $(EXEC_Flags) $(CXX_FLAGS) -o "bellmanford_matrix_big" $(OBJS)
+	@echo 'Finished building target: $@'
+	@echo ' '
+
+clean: 
+	rm *.o *.d bellmanford_matrix_big
+
