@@ -106,4 +106,3 @@ public:
 
 
 #endif /* READ_INPUT_FILE_H */
-
