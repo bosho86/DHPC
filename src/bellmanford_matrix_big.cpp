@@ -1,3 +1,6 @@
+
+
+
 #include <iostream>
 #include <stdio.h>
 #include <bits/stdc++.h>
@@ -10,10 +13,6 @@
 
 
 using namespace std;
-//#include <bellmanford.hpp>
-
-using namespace std;
-
 
 void graphmatrix(int V, int matrix[5][5]){
     int *mat;
@@ -32,7 +31,7 @@ int convert_dimension_2D_1D(int x, int y, int n) {
        return x * n + y;
    }
 
-//bellman_ford(my_rank, p, comm, utils::N, utils::mat, dist, &has_negative_cycle);
+
 
 void bellmanford(double *mat, double *distance, int V, int src, int my_rank, int p, bool *has_negative_cycle){
 int local_V;
@@ -74,10 +73,8 @@ for(int ii = 0; ii < local_V; ii++){
 local_distance[0] = 0;
 
 
-//NEEDS TO WAIT
-//MPI_Barrier(MPI_COMM_WORLD);
 
-//know if something changes..
+
 bool local_change;
 int local_iteration = 0;
 
@@ -88,11 +85,10 @@ for (int iter = 0; iter < local_V-1; iter++){
 	for (int u = local_start; u < local_finish; u++){
 		for(int v = 0; v < local_V; v++){
 			int weight = local_matrix[convert_dimension_2D_1D(u, v, local_V)];
-			//cout << weight << endl; // el tamano del weight esta malo-------------->revisar con la implementacion del chino..
+			
 			if(local_distance[u] + weight < local_distance[v]){
 				local_distance[v] = local_distance[u] + weight;
-				//incluir el predecesor, pero en forma mpi -----------> hacerlo hoy.
-		         //con una matrix pequena.
+			
 				local_change = true;
 
 			}
@@ -118,10 +114,10 @@ if(local_iteration = local_V -1){
 	for (int u = local_start; u < local_finish; u++){
 			for(int v = 0; v < local_V; v++){
 				int weight = local_matrix[convert_dimension_2D_1D(u, v, local_V)];
-				//cout << weight << endl; // el tamano del weight esta malo-------------->revisar con la implementacion del chino..
+				
 				if(local_distance[u] + weight < local_distance[v]){
 					local_distance[v] = local_distance[u] + weight;
-					//incluir el predecesor, toca incluir modo mpi.
+
 					local_change = true;
 					break;
 
@@ -137,7 +133,7 @@ if (my_rank = 0){
 	memcpy(distance, local_distance, local_V * sizeof(int));
 }
 
-//cout<< "Esta es la distancia" << distance << endl;
+
 free(local_matrix);
 free(local_distance);
 
@@ -168,7 +164,6 @@ int main(int argc, char **argv){
 	     AdjMat = graph.getAdjMat();
 
 
-	///hacer un template o cambiar todo a dobule, porque graph es double
     mat = (double *) malloc(V * V * sizeof(double));
     for (int i = 0; i < V; i++){
         for (int j = 0; j < V; j++) {
@@ -189,22 +184,14 @@ int main(int argc, char **argv){
 
     MPI_Comm_size(MPI_COMM_WORLD, &p);
     MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
-    //time counter
+    
     double t1, t2;
-    //MPI_Barrier(MPI_COMM_WORLD);
+   
     t1 = MPI_Wtime();
 
-    //calling the algo
-    //cout<<"This is my  rank"<< my_rank<<endl;
-    //cout<<"This is my process" <<p<< endl;
-
-	//bellmanford(my_rank, p, mat, V);
+    
     bellmanford(mat, distance, V, 0, my_rank, p, &has_negative_cycle);
 
-    // incluir Print_paths.
-    // MPI_Barrier(MPI_COMM_WORLD);
-
-    //end timer
     t2 = MPI_Wtime();
 
     if(my_rank == 0){
