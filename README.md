@@ -16,6 +16,8 @@ read_input_file.h -> helpter to read the map file.
 2. main_dijkstra.cpp -> parallelized version of the Dijkstra Algortihm
 3. main_A_Start.cpp -> parallelized attempt of the A* Algorithm
 
+Please go to Report.pdf, to see the performance and detailed explanation of this code.
+
 
 
 References
